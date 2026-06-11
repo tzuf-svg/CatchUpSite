@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CatchUp — Smarter decisions for tomato growers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --cream:#f5f1e6;
+    --cream-2:#ebe5d4;
+    --field:oklch(0.40 0.072 152);
+    --field-deep:oklch(0.31 0.06 153);
+    --field-bright:oklch(0.58 0.11 150);
+    --tomato:oklch(0.62 0.18 28);
+    --tomato-deep:oklch(0.52 0.17 28);
+    --ink:#1f2a22;
+    --muted:#5d6b60;
+    --cream-muted:#bcc7b5;
+    --disp:"Newsreader",Georgia,serif;
+    --sans:"Hanken Grotesk",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--cream);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.55;overflow-x:hidden}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 40px}
+  a{color:inherit;text-decoration:none}
+  .mono{font-weight:700;letter-spacing:.16em;text-transform:uppercase;font-size:11.5px}
+
+  /* nav */
+  header.nav{position:sticky;top:0;z-index:50}
+  .nav-inner{background:var(--field-deep);color:var(--cream)}
+  .nav-row{display:flex;align-items:center;justify-content:center;height:72px}
+  .logo{display:flex;align-items:center;gap:11px;font-family:var(--disp);font-weight:600;font-size:25px;letter-spacing:-.01em}
+  .berry{width:18px;height:18px;border-radius:50%;background:var(--tomato);position:relative;flex:0 0 auto;box-shadow:inset -2px -2px 0 rgba(0,0,0,.12)}
+  .berry::after{content:"";position:absolute;top:-5px;left:50%;transform:translateX(-50%) rotate(-16deg);width:11px;height:7px;border-radius:0 70% 0 70%;background:var(--field-bright)}
+
+  /* hero — full-viewport, clock as centerpiece */
+  .hero{background:var(--field-deep);color:var(--cream);position:relative;overflow:hidden;min-height:calc(100svh - 72px);display:flex;align-items:center;justify-content:center;padding:48px 0 60px;text-align:center}
+  .hero-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:1}
+  .hero-bg .ring{position:absolute;width:min(640px,82vmin);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 36%,var(--field-bright),transparent 60%);opacity:.5;filter:blur(10px)}
+  .hero-bg .tomato-photo{position:relative;width:min(420px,54vmin);height:min(420px,54vmin);border-radius:50%;object-fit:cover;opacity:.92;box-shadow:0 40px 90px -28px rgba(0,0,0,.6);background:rgba(239,231,212,.10)}
+  .hero-bg .leaf{position:absolute;z-index:3;top:calc(50% - min(210px,27vmin));left:calc(50% + min(120px,15vmin));width:54px;height:34px;border-radius:0 80% 0 80%;background:var(--field-bright);transform:rotate(-24deg);box-shadow:0 8px 18px -8px rgba(0,0,0,.5)}
+  .hero::after{content:"";position:absolute;inset:0;z-index:2;background:radial-gradient(ellipse 90% 70% at 50% 50%,rgba(18,38,24,.55),rgba(18,38,24,.82))}
+  .hero .blob{position:absolute;border-radius:50%;filter:blur(2px);opacity:.5;z-index:1}
+  .b1{width:520px;height:520px;background:radial-gradient(circle at 35% 35%,var(--field-bright),transparent 65%);top:-160px;right:-120px}
+  .b2{width:360px;height:360px;background:radial-gradient(circle at 50% 50%,var(--tomato),transparent 68%);bottom:-140px;left:-100px;opacity:.32}
+  .hero-center{position:relative;z-index:4;display:flex;flex-direction:column;align-items:center;gap:clamp(22px,3.4vh,38px);max-width:1040px;margin:0 auto;padding:0 40px}
+  .eyebrow{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:8px 16px;border-radius:40px;color:var(--cream);margin:0}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--tomato);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  h1.head{font-family:var(--disp);font-weight:500;font-size:clamp(28px,4.4vw,56px);line-height:1.05;letter-spacing:-.02em;max-width:20ch;margin:0}
+  h1.head span{font-style:italic;font-weight:400;color:var(--tomato);position:relative;white-space:nowrap}
+  h1.head span::after{content:"";position:absolute;left:0;right:0;bottom:.02em;height:.06em;background:var(--field-bright);border-radius:4px}
+
+  .signup-note{margin-top:14px;color:var(--cream-muted);font-size:13.5px}
+
+  /* countdown — hero centerpiece */
+  .count-label{color:var(--cream-muted);line-height:1.25}
+  .count-label .big{display:block;font-family:var(--disp);font-weight:500;font-size:clamp(22px,2.6vw,32px);text-transform:none;letter-spacing:-.01em;color:var(--cream);margin-top:6px;white-space:nowrap}
+  .clock{display:flex;gap:clamp(12px,1.6vw,22px);justify-content:center;flex-wrap:wrap}
+  .unit{background:var(--cream);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:clamp(18px,2.4vh,30px) clamp(12px,1.4vw,20px);text-align:center;min-width:clamp(104px,13vw,156px);box-shadow:0 24px 50px -28px rgba(0,0,0,.6)}
+  .unit .num{font-family:var(--disp);font-weight:500;font-size:clamp(48px,6.6vw,96px);line-height:1;color:var(--field);font-variant-numeric:tabular-nums}
+  .unit .cap{color:var(--muted);margin-top:10px;font-size:clamp(11px,1vw,13px);letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+
+  section{padding:104px 0}
+  .sec-tag{display:inline-block;color:var(--tomato);margin-bottom:14px}
+  .sec-title{font-family:var(--disp);font-weight:500;font-size:clamp(30px,4vw,48px);letter-spacing:-.015em;max-width:20ch;line-height:1.06}
+
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px}
+  .pcard{background:#fff;border:1px solid var(--cream-2);border-radius:24px;padding:32px 30px;transition:.2s}
+  .pcard:hover{transform:translateY(-4px);box-shadow:0 22px 44px -28px rgba(20,40,25,.45)}
+  .picon{width:48px;height:48px;border-radius:14px;background:var(--cream-2);display:flex;align-items:center;justify-content:center;margin-bottom:22px}
+  .picon b{width:16px;height:16px;border-radius:5px;background:var(--field)}
+  .pcard:nth-child(2) .picon b{border-radius:50%;background:var(--tomato)}
+  .pcard:nth-child(3) .picon b{background:var(--field-bright);transform:rotate(45deg)}
+  .pcard h3{font-family:var(--disp);font-weight:600;font-size:23px;margin-bottom:10px;letter-spacing:-.01em}
+  .pcard p{color:var(--muted);font-size:15px}
+
+  /* how */
+  .how{background:var(--cream-2)}
+  .how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:52px;border-top:1px solid #ddd6c4}
+  .how-steps .steps{display:contents}
+  .steps .step{display:flex;flex-direction:column;gap:16px;padding:34px 34px 34px 0;border-right:1px solid #ddd6c4}
+  .steps .step:last-child{border-right:none;padding-right:0}
+  .step .n{flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:var(--field);color:var(--cream);font-family:var(--disp);font-style:italic;font-weight:500;display:flex;align-items:center;justify-content:center;font-size:20px}
+  .step h4{font-family:var(--disp);font-weight:600;font-size:21px;margin-bottom:5px}
+  .step p{color:var(--muted);font-size:15px}
+
+  /* final */
+  .final{background:var(--field-deep);color:var(--cream);text-align:center;position:relative;overflow:hidden}
+  .final .blob{position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,var(--tomato),transparent 66%);opacity:.3;top:50%;left:50%;transform:translate(-50%,-50%)}
+  .final .wrap{position:relative;z-index:2}
+  .final h2{font-family:var(--disp);font-weight:500;font-size:clamp(34px,5.4vw,64px);line-height:1.04;letter-spacing:-.02em;max-width:16ch;margin:0 auto}
+  .final h2 span{font-style:italic;font-weight:400;color:var(--tomato)}
+  .final p{color:var(--cream-muted);max-width:46ch;margin:20px auto 0;font-size:17px}
+  .final .signup-note{color:var(--cream-muted);margin-top:24px}
+
+  footer{background:var(--field-deep);color:var(--cream-muted);padding:32px 0;border-top:1px solid rgba(255,255,255,.1)}
+  .foot-row{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:13.5px}
+
+  @media(max-width:880px){
+    .wrap{padding:0 24px}
+    .grid3{grid-template-columns:1fr}
+    .how-steps{grid-template-columns:1fr;gap:0;border-top:none}
+    .how-steps .step{flex-direction:row;gap:18px;padding:24px 0;border-right:none;border-bottom:1px solid #ddd6c4}
+    .how-steps .step:last-child{border-bottom:none}
+    .count-label{text-align:center}
+    .clock{flex-wrap:wrap;justify-content:center}
+    .hero{min-height:calc(100svh - 72px);padding:40px 0 48px}
+    .hero-bg .tomato-photo{width:min(340px,70vmin);height:min(340px,70vmin)}
+    .hero-bg .ring{width:min(420px,86vmin)}
+    .unit{min-width:clamp(72px,40vw,140px)}
+  }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="nav-inner"><div class="wrap nav-row">
+    <a class="logo" href="#top"><span class="berry"></span>CatchUp</a>
+  </div></div>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="blob b1"></div><div class="blob b2"></div>
+    <div class="hero-bg">
+      <div class="ring"></div>
+      <img class="tomato-photo" src="tomato.webp" alt="Ripe tomatoes on the vine" />
+      <div class="leaf"></div>
+    </div>
+    <div class="hero-center">
+      <span class="eyebrow mono"><span class="dot"></span>AI agronomist for tomato growers</span>
+      <h1 class="head">The field is changing faster than ever. Time to <span>catch up.</span></h1>
+      <div class="count-label mono">Harvest is coming<span class="big">CatchUp launches in</span></div>
+      <div class="clock" id="clock">
+        <div class="unit"><div class="num" data-d>—</div><div class="cap">Days</div></div>
+        <div class="unit"><div class="num" data-h>—</div><div class="cap">Hrs</div></div>
+        <div class="unit"><div class="num" data-m>—</div><div class="cap">Min</div></div>
+        <div class="unit"><div class="num" data-s>—</div><div class="cap">Sec</div></div>
+      </div>
+      <div class="signup-note">Launching on iOS, Android &amp; web in 2026.</div>
+    </div>
+  </section>
+
+  <!-- PRESSURES -->
+  <section class="wrap">
+    <span class="sec-tag mono">Why now</span>
+    <h2 class="sec-title">The season is getting harder. Your tools should get smarter.</h2>
+    <div class="grid3">
+      <div class="pcard"><div class="picon"><b></b></div><h3>A shifting climate</h3><p>Heat spikes and erratic rain throw proven calendars out of step. CatchUp adapts the plan to the weather you're actually getting.</p></div>
+      <div class="pcard"><div class="picon"><b></b></div><h3>Disease on the move</h3><p>Blight, viruses and pests are reaching new regions. Spot the early signs and act before a problem spreads down the row.</p></div>
+      <div class="pcard"><div class="picon"><b></b></div><h3>Faster decisions</h3><p>Irrigate or hold? Spray or wait? Get a grounded recommendation in seconds — not after the next agronomist visit.</p></div>
+    </div>
+  </section>
+
+  <!-- HOW -->
+  <section class="how"><div class="wrap">
+    <span class="sec-tag mono">How it works</span>
+    <h2 class="sec-title">Your field, plus a century of tomato know-how.</h2>
+    <div class="how-steps">
+      <div class="steps">
+        <div class="step"><div class="n">1</div><div><h4>Bring your field in</h4><p>Scouting notes, photos, sensors, weather and soil — CatchUp works with the data you already gather.</p></div></div>
+        <div class="step"><div class="n">2</div><div><h4>Just ask</h4><p>“Why are these leaves curling?” “Safe to spray before the rain?” Answers grounded in real agronomy.</p></div></div>
+        <div class="step"><div class="n">3</div><div><h4>Act with confidence</h4><p>A clear recommendation, the reasoning behind it, and what to watch — tuned to your variety and region.</p></div></div>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- FINAL -->
+  <section class="final">
+    <div class="blob"></div>
+    <div class="wrap">
+      <h2>Stop chasing the season. <span>Catch up</span> to it.</h2>
+      <p>Join the growers getting first access when CatchUp opens in 2026.</p>
+      <div class="signup-note">Opening in 2026.</div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap foot-row">
+  <a class="logo" href="#top" style="font-size:20px"><span class="berry"></span>CatchUp</a>
+  <span>© 2026 CatchUp · Smarter decisions for tomato growers</span>
+</div></footer>
+
+<script>
+  const LAUNCH = new Date("2026-09-15T09:00:00").getTime();
+  const cl = document.getElementById("clock");
+  function tick(){
+    const diff = Math.max(0, LAUNCH - Date.now());
+    const pad = n => String(n).padStart(2,"0");
+    cl.querySelector("[data-d]").textContent = pad(Math.floor(diff/86400000));
+    cl.querySelector("[data-h]").textContent = pad(Math.floor(diff%86400000/3600000));
+    cl.querySelector("[data-m]").textContent = pad(Math.floor(diff%3600000/60000));
+    cl.querySelector("[data-s]").textContent = pad(Math.floor(diff%60000/1000));
+  }
+  tick(); setInterval(tick,1000);
+</script>
+</body>
+</html>
