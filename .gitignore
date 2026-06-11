@@ -1,0 +1,23 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+crash.log
+crash.*.log
+
+# Local var overrides (may contain secrets); commit .tfvars.example instead.
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+
+# Local CLI overrides
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Editor / agent local config
+.claude/
